@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía sobre la Memoria ROM</title>
+    
+    <!-- Carga de Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuración de Tailwind (opcional, para fuentes) --><script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Estilos CSS personalizados para animaciones y fondo negro --><style>
+        /* Estilos base para los elementos que se animarán */
+        .animate-on-scroll {
+            opacity: 0;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform; /* Optimización para animaciones */
+        }
+        
+        .animate-from-bottom {
+            transform: translateY(30px);
+        }
+        .animate-from-left {
+            transform: translateX(-50px);
+        }
+        .animate-from-right {
+            transform: translateX(50px);
+        }
+        
+        /* Clase que se añade con JS cuando el elemento es visible */
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translate(0, 0); /* Resetea todas las transformaciones */
+        }
+
+        /* Animación de pulso para el encabezado */
+        .pulse-header {
+            animation: pulse-light 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse-light {
+            0%, 100% {
+                text-shadow: 0 0 5px rgba(66, 153, 225, 0.4);
+            }
+            50% {
+                text-shadow: 0 0 15px rgba(66, 153, 225, 0.9);
+            }
+        }
+
+        /* ****************************************************** */
+        /* Nuevo estilo para el fondo: negro sólido */
+        /* ****************************************************** */
+        body {
+            background-color: #15307a; /* Fondo negro sólido */
+        }
+
+        /* Asegurarse de que el texto y los elementos se vean bien sobre el fondo negro */
+        body.dark {
+            color: #E2E8F0; /* Color de texto claro para modo oscuro por defecto de tailwind */
+        }
+        body:not(.dark) {
+            color: #F8FAFC; /* Color de texto claro para modo claro si el fondo es negro */
+        }
+
+        /* También ajusto los fondos de las secciones principales para que se destaquen del negro puro */
+        .bg-white {
+            background-color: #1A202C !important; /* Un gris oscuro en lugar de blanco puro */
+        }
+        .dark .bg-slate-800 {
+            background-color: #1A202C !important; /* Asegura el mismo gris oscuro en modo oscuro */
+        }
+        /* Ajustar fondos de cabecera y footer si es necesario para mantener coherencia */
+        header {
+            background-color: #1A202C !important; /* Fondo más oscuro para la cabecera */
+        }
+        .dark header {
+            background-color: #1A202C !important;
+        }
+        footer {
+            background-color: #10151D !important; /* Fondo más oscuro para el footer */
+        }
+        .dark footer {
+            background-color: #10151D !important;
+        }
+        .bg-slate-100 { /* Para thead de la tabla */
+            background-color: #2D3748 !important;
+        }
+        .dark .bg-slate-700 { /* Para thead de la tabla en dark mode */
+            background-color: #2D3748 !important;
+        }
+    </style>
+</head>
+<body class="text-white font-sans leading-relaxed"> <!-- Cambiado a text-white por defecto para fondo negro --><!-- Encabezado --><header class="bg-slate-800/95 backdrop-blur-sm shadow-md sticky top-0 z-50 transition-all duration-300">
+        <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-2xl font-bold text-indigo-400">Memoria ROM</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#que-es-memoria" class="text-slate-300 hover:text-indigo-400 hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">¿Qué es Memoria?</a>
+                        <a href="#que-es-rom" class="text-slate-300 hover:text-indigo-400 hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">¿Qué es ROM?</a>
+                        <a href="#rom-vs-ram" class="text-slate-300 hover:text-indigo-400 hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">ROM vs. RAM</a>
+                        <a href="#tipos-rom" class="text-slate-300 hover:text-indigo-400 hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">Tipos de ROM</a>
+                        <a href="#aplicaciones" class="text-slate-300 hover:text-indigo-400 hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">Aplicaciones</a>
+                        <a href="#galeria" class="text-slate-300 hover:text-indigo-400 hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">Galería</a>
+                        <a href="#equipo" class="text-slate-300 hover:text-indigo-400 hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">Equipo</a>
+                    </div>
+                </div>
+                <!-- Botón de Menú móvil --><div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-slate-300 hover:text-indigo-400 p-2 rounded-md transition-colors duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Menú desplegable móvil --><div id="mobile-menu" class="md:hidden hidden pb-4 border-t border-slate-700">
+                <a href="#que-es-memoria" class="block text-slate-300 hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium">¿Qué es Memoria?</a>
+                <a href="#que-es-rom" class="block text-slate-300 hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium">¿Qué es ROM?</a>
+                <a href="#rom-vs-ram" class="block text-slate-300 hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium">ROM vs. RAM</a>
+                <a href="#tipos-rom" class="block text-slate-300 hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium">Tipos de ROM</a>
+                <a href="#aplicaciones" class="block text-slate-300 hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium">Aplicaciones</a>
+                <a href="#galeria" class="block text-slate-300 hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium">Galería</a>
+                <a href="#equipo" class="block text-slate-300 hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium">Equipo</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contenido Principal --><main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- Hero Section --><section class="text-center py-20 sm:py-32">
+            <h2 class="text-5xl md:text-7xl font-extrabold text-white mb-6 animate-on-scroll animate-from-bottom">
+                Todo sobre la Memoria ROM
+            </h2>
+            <p class="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto mb-10 animate-on-scroll animate-from-bottom" style="transition-delay: 150ms;">
+                La guía definitiva para entender el almacenamiento no volátil, desde el BIOS hasta las unidades flash.
+            </p>
+            <a href="#que-es-memoria" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-indigo-700 transition-all duration-300 shadow-lg hover:shadow-indigo-500/50 animate-on-scroll animate-from-bottom" style="transition-delay: 300ms;">
+                Comenzar
+            </a>
+        </section>
+
+        <!-- Sección 1: ¿Qué es la Memoria? --><section id="que-es-memoria" class="py-16 sm:py-20">
+            <div class="bg-slate-800 rounded-xl shadow-xl overflow-hidden flex flex-col md:flex-row">
+                <div class="md:w-1/2 p-8 sm:p-12 lg:p-16 animate-on-scroll animate-from-left">
+                    <h2 class="text-3xl lg:text-4xl font-extrabold text-white mb-4">¿Qué es la Memoria en Computación?</h2>
+                    <p class="text-lg text-slate-300 mb-4">
+                        En informática, la "memoria" se refiere a los componentes de un dispositivo que almacenan datos e instrucciones. Es como el cerebro a corto y largo plazo de la computadora.
+                    </p>
+                    <p class="text-slate-400">
+                        Existen dos tipos principales: la <strong>Memoria de Acceso Aleatorio (RAM)</strong>, que es volátil (pierde datos sin energía) y guarda lo que estás usando ahora, y la <strong>Memoria de Solo Lectura (ROM)</strong>, que es no volátil y guarda instrucciones permanentes.
+                    </p>
+                </div>
+                <div class="md:w-1/2 animate-on-scroll animate-from-right" style="transition-delay: 150ms;">
+                    <img src="public/img/Qué es la Memoria en Computación_foto.jpg" 
+                         alt="Ilustración de un chip de memoria genérico" 
+                         class="w-full h-64 md:h-full object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2: ¿Qué es la Memoria ROM? --><section id="que-es-rom" class="py-16 sm:py-20">
+            <div class="bg-slate-800 rounded-xl shadow-xl overflow-hidden flex flex-col md:flex-row-reverse">
+                <div class="md:w-1/2 p-8 sm:p-12 lg:p-16 animate-on-scroll animate-from-right">
+                    <h2 class="text-3xl lg:text-4xl font-extrabold text-indigo-400 mb-4 pulse-header">¿Qué es la Memoria ROM?</h2>
+                    <p class="text-lg text-slate-300 mb-4">
+                        <strong>ROM</strong> significa <strong>Memoria de Solo Lectura</strong> (Read-Only Memory). Es un tipo de almacenamiento no volátil, lo que significa que la información que contiene <strong>no se borra</strong> cuando apagas el dispositivo.
+                    </p>
+                    <p class="text-slate-400 mb-6">
+                        Su propósito principal es almacenar el <strong>firmware</strong>: un software de bajo nivel que controla el hardware. El ejemplo más famoso es el <strong>BIOS</strong> o <strong>UEFI</strong> de una computadora.
+                    </p>
+                    <p class="text-slate-400 mb-6">
+                        Al encender el PC, la ROM es lo primero que se lee. Ejecuta el <strong>POST</strong> (Power-On Self Test) para verificar que componentes como la RAM, el teclado y el disco duro funcionen. Luego, le dice a la computadora cómo "despertar" y cargar el sistema operativo (como Windows o macOS) desde el disco duro a la RAM.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-slate-400">
+                        <li><strong>No volátil:</strong> Los datos persisten sin energía.</li>
+                        <li><strong>Solo lectura:</strong> En su forma original, no se podía modificar.</li>
+                        <li><strong>Esencial:</strong> Permite que el dispositivo arranque.</li>
+                    </ul>
+                </div>
+                <div class="md:w-1/2 animate-on-scroll animate-from-left" style="transition-delay: 150ms;">
+                    <img src="public/img/memoria_rom.jpg" 
+                         alt="Chip ROM (BIOS) en una placa base" 
+                         class="w-full h-64 md:h-full object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2.5: ROM vs RAM --><section id="rom-vs-ram" class="py-16 sm:py-20">
+            <h2 class="text-4xl lg:text-5xl font-extrabold text-center text-white mb-16 animate-on-scroll animate-from-bottom">
+                Comparativa: ROM vs. RAM
+            </h2>
+            <div class="bg-slate-800 rounded-xl shadow-xl overflow-hidden animate-on-scroll animate-from-bottom">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-slate-400">
+                        <thead class="bg-slate-700 text-sm font-semibold text-white uppercase">
+                            <tr>
+                                <th scope="col" class="px-6 py-4">Característica</th>
+                                <th scope="col" class="px-6 py-4">Memoria ROM (Solo Lectura)</th>
+                                <th scope="col" class="px-6 py-4">Memoria RAM (Acceso Aleatorio)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700">
+                            <tr>
+                                <td class="px-6 py-4 font-medium">Volatilidad</td>
+                                <td class="px-6 py-4"><strong>No volátil</strong> (conserva datos sin energía)</td>
+                                <td class="px-6 py-4"><strong>Volátil</strong> (pierde datos sin energía)</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-medium">Propósito</td>
+                                <td class="px-6 py-4">Almacena el firmware y software de arranque.</td>
+                                <td class="px-6 py-4">Almacena el sistema operativo, aplicaciones y datos en uso.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-medium">Velocidad</td>
+                                <td class="px-6 py-4">Más lenta.</td>
+                                <td class="px-6 py-4">Extremadamente rápida.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-medium">Capacidad Típica</td>
+                                <td class="px-6 py-4">Pequeña (Megabytes).</td>
+                                <td class="px-6 py-4">Grande (Gigabytes).</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-medium">Escritura</td>
+                                <td class="px-6 py-4">Difícil o imposible de escribir (solo lectura).</td>
+                                <td class="px-6 py-4">Fácil y rápida de leer y escribir.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 3: Tipos de Memoria ROM --><section id="tipos-rom" class="py-16 sm:py-20">
+            <h2 class="text-4xl lg:text-5xl font-extrabold text-center text-white mb-16 animate-on-scroll animate-from-bottom">
+                Tipos de Memoria ROM
+            </h2>
+            
+            <!-- Grid responsivo para los tipos de ROM --><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Card: MROM --><div class="bg-slate-800 rounded-lg shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl animate-on-scroll animate-from-bottom border-b-4 border-transparent hover:border-indigo-500">
+                    <img src="public/img/MROM.png" alt="MROM" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">MROM (Mask ROM)</h3>
+                        <p class="text-slate-400">
+                            Es el tipo original de ROM. Los datos se graban permanentemente en el chip durante el proceso de fabricación en la fábrica, utilizando una "máscara" fotolitográfica. Esto hace que sea un proceso costoso y solo rentable para la producción en masa. Una vez fabricada, la información almacenada en una MROM es imposible de modificar. Ejemplos de su uso incluyen cartuchos de videojuegos antiguos y calculadoras básicas.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card: PROM --><div class="bg-slate-800 rounded-lg shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl animate-on-scroll animate-from-bottom border-b-4 border-transparent hover:border-indigo-500" style="transition-delay: 100ms;">
+                    <img src="public/img/PROM.jpg" alt="PROM" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">PROM (Programmable ROM)</h3>
+                        <p class="text-slate-400">
+                            Se vende "en blanco" y, a diferencia de la MROM, puede ser programada <strong>una sola vez</strong> por el usuario final o un desarrollador. Contiene una matriz de fusibles que se "queman" de forma selectiva aplicando un alto voltaje con un dispositivo llamado programador de PROM. Una vez que un fusible se quema, el cambio es irreversible. Fue útil para prototipos y producciones de bajo volumen antes de comprometerse con una MROM.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card: EPROM --><div class="bg-slate-800 rounded-lg shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl animate-on-scroll animate-from-bottom border-b-4 border-transparent hover:border-indigo-500" style="transition-delay: 200ms;">
+                    <img src="public/img/EPROM.jpg" alt="EPROM" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">EPROM (Erasable PROM)</h3>
+                        <p class="text-slate-400">
+                            Representó un gran avance, ya que se puede borrar y reprogramar múltiples veces. Es fácilmente identificable por una pequeña "ventana" de cuarzo en la parte superior del chip. Para borrar su contenido, el chip debe ser expuesto a <strong>luz ultravioleta</strong> intensa (generalmente de un borrador de EPROM) durante varios minutos. Este proceso borra el chip por completo, permitiendo su reprogramación.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card: EEPROM --><div class="bg-slate-800 rounded-lg shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl animate-on-scroll animate-from-bottom border-b-4 border-transparent hover:border-indigo-500" style="transition-delay: 300ms;">
+                    <img src="public/img/EEPROM.png" alt="EEPROM" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">EEPROM (Electrically Erasable PROM)</h3>
+                        <p class="text-slate-400">
+                            Una evolución aún más práctica de la EPROM. Se puede borrar y reprogramar <strong>eléctricamente</strong>, lo que elimina la necesidad de luz UV y de retirar el chip del circuito. Esto permite actualizaciones de firmware "in situ". Sin embargo, la escritura y el borrado son más lentos y se realizan byte por byte, lo que la hace menos ideal para grandes volúmenes de datos.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Card: Flash Memory --><div class="bg-slate-800 rounded-lg shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl animate-on-scroll animate-from-bottom md:col-span-2 lg:col-span-1 border-b-4 border-transparent hover:border-indigo-500" style="transition-delay: 400ms;">
+                    <img src="public/img/Memoria Flash.jpg" alt="Memoria Flash" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Memoria Flash</h3>
+                        <p class="text-slate-400">
+                            Es un tipo avanzado y de alta velocidad de EEPROM. A diferencia de las EEPROM tradicionales, la memoria Flash es mucho más rápida porque borra y escribe datos en "bloques" (o páginas/sectores) enteros a la vez, en lugar de byte por byte. Es la tecnología dominante en las <strong>unidades USB, tarjetas SD, discos de estado sólido (SSD)</strong>, y la ROM de los smartphones y tablets modernos.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Sección 4: Aplicaciones Modernas --><section id="aplicaciones" class="py-16 sm:py-20">
+            <h2 class="text-4xl lg:text-5xl font-extrabold text-center text-white mb-16 animate-on-scroll animate-from-bottom">
+                Aplicaciones Modernas de la ROM
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- App Card 1 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 0ms;">
+                    <img src="public/img/Firmware de PC.jpg" alt="Icono BIOS" class="w-20 h-20 rounded-full mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-white">Firmware de PC</h3>
+                    <p class="text-slate-400">Almacena el BIOS o UEFI para arrancar la computadora y gestionar hardware esencial.</p>
+                </div>
+                <!-- App Card 2 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 100ms;">
+                    <img src="public/img/Dispositivos IoT.jpg" alt="Icono IoT" class="w-20 h-20 rounded-full mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-white">Dispositivos IoT</h3>
+                    <p class="text-slate-400">Guarda el software de operación esencial en dispositivos conectados como termostatos inteligentes, cámaras de seguridad y electrodomésticos.</p>
+                </div>
+                <!-- App Card 3 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 200ms;">
+                    <img src="public/img/Sistemas Automotrices.jpg" alt="Icono Auto" class="w-20 h-20 rounded-full mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-white">Sistemas Automotrices</h3>
+                    <p class="text-slate-400">Controla sistemas críticos como el de inyección de combustible, frenos ABS, airbags, y sistemas de infoentretenimiento.</p>
+                </div>
+                <!-- App Card 4 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 300ms;">
+                    <img src="public/img/Smartphones y Tablets.jpg" alt="Icono Móvil" class="w-20 h-20 rounded-full mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-white">Smartphones y Tablets</h3>
+                    <p class="text-slate-400">Contiene el sistema operativo (Android/iOS) y el firmware necesario para el funcionamiento básico.</p>
+                </div>
+                <!-- App Card 5 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 400ms;">
+                    <img src="public/img/Consolas de Videojuegos.png" alt="Icono Consola" class="w-20 h-20 rounded-full mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-white">Consolas de Videojuegos</h3>
+                    <p class="text-slate-400">Almacena el sistema operativo de la consola y el firmware para los controladores y juegos.</p>
+                </div>
+                 <!-- App Card 6 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 500ms;">
+                    <img src="public/img/Wearables.jpg" alt="Icono Wearable" class="w-20 h-20 rounded-full mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-white">Wearables</h3>
+                    <p class="text-slate-400">Presente en relojes inteligentes y pulseras de actividad para su funcionamiento fundamental.</p>
+                </div>
+                <!-- App Card 7 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 600ms;">
+                    <img src="public/img/Routers y Módems.jpg" alt="Icono Router" class="w-20 h-20 rounded-full mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-white">Routers y Módems</h3>
+                    <p class="text-slate-400">Contiene el firmware que gestiona la conexión a internet y la red local.</p>
+                </div>
+                <!-- App Card 8 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 700ms;">
+                    <img src="public/img/Smart TVs.jpg" alt="Icono TV" class="w-20 h-20 rounded-full mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-white">Smart TVs</h3>
+                    <p class="text-slate-400">Alberga el sistema operativo y las aplicaciones esenciales de la televisión inteligente.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 5: Galería de Memorias --><section id="galeria" class="py-16 sm:py-20">
+            <h2 class="text-4xl lg:text-5xl font-extrabold text-center text-white mb-16 animate-on-scroll animate-from-bottom">
+                Galería de Memorias
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Imagen 1: EPROM --><div class="bg-slate-800 rounded-lg shadow-md overflow-hidden animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 0ms;">
+                    <img src="public/img/Chip EPROM.jpg" alt="Chip EPROM con ventana de cuarzo" class="w-full h-56 object-cover">
+                    <div class="p-4 text-center">
+                        <h3 class="font-bold text-lg text-white">Chip EPROM</h3>
+                        <p class="text-sm text-slate-400">Notoria por su ventana de cuarzo para borrado UV.</p>
+                    </div>
+                </div>
+
+                <!-- Imagen 2: Módulo RAM --><div class="bg-slate-800 rounded-lg shadow-md overflow-hidden animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 100ms;">
+                    <img src="public/img/Módulo RAM.jpg" alt="Módulo de memoria RAM" class="w-full h-56 object-cover">
+                    <div class="p-4 text-center">
+                        <h3 class="font-bold text-lg text-white">Módulo RAM</h3>
+                        <p class="text-sm text-slate-400">Memoria volátil para datos en uso.</p>
+                    </div>
+                </div>
+
+                <!-- Imagen 3: Disco SSD --><div class="bg-slate-800 rounded-lg shadow-md overflow-hidden animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 200ms;">
+                    <img src="public/img/Disco SSD.jpg" alt="Unidad de Estado Sólido (SSD)" class="w-full h-56 object-cover">
+                    <div class="p-4 text-center">
+                        <h3 class="font-bold text-lg text-white">Disco SSD</h3>
+                        <p class="text-sm text-slate-400">Basado en memoria Flash NAND.</p>
+                    </div>
+                </div>
+
+                <!-- Imagen 4: Tarjeta SD --><div class="bg-slate-800 rounded-lg shadow-md overflow-hidden animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 300ms;">
+                    <img src="public/img/Tarjeta SD.jpg" alt="Tarjeta de memoria SD" class="w-full h-56 object-cover">
+                    <div class="p-4 text-center">
+                        <h3 class="font-bold text-lg text-white">Tarjeta SD</h3>
+                        <p class="text-sm text-slate-400">Almacenamiento portátil Flash.</p>
+                    </div>
+                </div>
+
+                <!-- Imagen 5: Chip BIOS --><div class="bg-slate-800 rounded-lg shadow-md overflow-hidden animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 400ms;">
+                    <img src="public/img/Chip BIOS (EEPROM).jpg" alt="Chip BIOS en placa base" class="w-full h-56 object-cover">
+                    <div class="p-4 text-center">
+                        <h3 class="font-bold text-lg text-white">Chip BIOS (EEPROM)</h3>
+                        <p class="text-sm text-slate-400">El firmware de la placa base.</p>
+                    </div>
+                </div>
+
+                <!-- Imagen 6: MROM (Cartucho) --><div class="bg-slate-800 rounded-lg shadow-md overflow-hidden animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 500ms;">
+                    <img src="public/img/Cartucho (MROM).png" alt="Cartucho de videojuego antiguo (MROM)" class="w-full h-56 object-cover">
+                    <div class="p-4 text-center">
+                        <h3 class="font-bold text-lg text-white">Cartucho (MROM)</h3>
+                        <p class="text-sm text-slate-400">Ejemplo clásico de Mask ROM.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Sección 6: Nuestro Equipo --><section id="equipo" class="py-16 sm:py-20">
+            <h2 class="text-4xl lg:text-5xl font-extrabold text-center text-white mb-16 animate-on-scroll animate-from-bottom">
+                Nuestro Equipo
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                
+                <!-- Integrante 1 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 0ms;">
+                    <img src="public/img/Logo_DV.jpg" alt="Foto de perfil" class="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg border-4 border-slate-700">
+                    <h3 class="text-xl font-bold text-white">Vargas Medina Diego</h3>
+                    <p class="text-indigo-400">Expositor Y Programador</p>
+                </div>
+
+                <!-- Integrante 2 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 100ms;">
+                    <img src="public/img/Logo_Navarro.jpeg" alt="Foto de perfil" class="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg border-4 border-slate-700">
+                    <h3 class="text-xl font-bold text-white">González Navarro Alejandro</h3>
+                    <p class="text-indigo-400">Expositor</p>
+                </div>
+
+                <!-- Integrante 3 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 200ms;">
+                    <img src="public/img/Logo_Luis.png" alt="Foto de perfil" class="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg border-4 border-slate-700">
+                    <h3 class="text-xl font-bold text-white">Hernández Jiménez Luis</h3>
+                    <p class="text-indigo-400">Expositor</p>
+                </div>
+
+                <!-- Integrante 4 --><div class="bg-slate-800 p-6 rounded-lg shadow-md text-center animate-on-scroll animate-from-bottom transition-all duration-300 hover:shadow-xl hover:scale-105" style="transition-delay: 300ms;">
+                    <img src="public/img/Logo_Darla.jpeg" alt="Foto de perfil" class="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg border-4 border-slate-700">
+                    <h3 class="text-xl font-bold text-white">García Faz Darla</h3>
+                    <p class="text-indigo-400">Expositor</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Botón de Volver Arriba --><button id="scroll-to-top" class="hidden fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 z-50">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+        </svg>
+    </button>
+
+    <!-- Footer --><footer class="bg-slate-900 text-slate-400 mt-16">
+        <div class="max-w-6xl mx-auto px-8 py-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- Columna 1 --><div>
+                    <h3 class="text-lg font-bold text-white mb-4">Navegación</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#que-es-memoria" class="hover:text-indigo-400 transition-colors">¿Qué es Memoria?</a></li>
+                        <li><a href="#que-es-rom" class="hover:text-indigo-400 transition-colors">¿Qué es ROM?</a></li>
+                        <li><a href="#rom-vs-ram" class="hover:text-indigo-400 transition-colors">ROM vs. RAM</a></li>
+                        <li><a href="#tipos-rom" class="hover:text-indigo-400 transition-colors">Tipos de ROM</a></li>
+                        <li><a href="#aplicaciones" class="hover:text-indigo-400 transition-colors">Aplicaciones</a></li>
+                        <li><a href="#galeria" class="hover:text-indigo-400 transition-colors">Galería</a></li>
+                        <li><a href="#equipo" class="hover:text-indigo-400 transition-colors">Equipo</a></li>
+                    </ul>
+                </div>
+               
+                <!-- Columna 2 --><div>
+                    <h3 class="text-lg font-bold text-white mb-4">Proyecto</h3>
+                    <p class="text-sm">
+                        Esta página es un proyecto de demostración para ilustrar conceptos de hardware y desarrollo web.
+                    </p>
+                </div>
+            </div>
+            <div class="border-t border-slate-700 mt-12 pt-8 text-center text-sm">
+                <p>&copy; 2025 5IM8 VARGAS. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script de JavaScript para animaciones --><script>
+        // Espera a que el contenido del DOM esté cargado
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            // --- Lógica del IntersectionObserver para animar al hacer scroll ---
+            const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
+
+            // Configura el IntersectionObserver
+            // Este API moderna de JS nos permite saber cuándo un elemento entra en la pantalla
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // Si el elemento es visible (está 'intersectando' la pantalla)
+                    if (entry.isIntersecting) {
+                        // Añade la clase 'is-visible' para activar la animación CSS
+                        entry.target.classList.add('is-visible');
+                        
+                        // Opcional: deja de observar el elemento una vez animado
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                // Opciones: 'threshold' define qué porcentaje del elemento
+                // debe estar visible para disparar la animación (0.1 = 10%)
+                threshold: 0.1
+            });
+
+            // Pone a cada elemento bajo observación
+            elementsToAnimate.forEach(element => {
+                observer.observe(element);
+            });
+
+            // --- Lógica del Menú Móvil ---
+            const menuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Opcional: Cierra el menú al hacer clic en un enlace
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // --- Lógica del Botón "Volver Arriba" ---
+            const scrollToTopButton = document.getElementById('scroll-to-top');
+
+            // Muestra u oculta el botón basado en el scroll
+            window.addEventListener('scroll', () => {
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                    scrollToTopButton.classList.remove('hidden');
+                } else {
+                    scrollToTopButton.classList.add('hidden');
+                }
+            });
+
+            // Acción de clic para el botón
+            scrollToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth' // ¡Animación de scroll suave!
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
+
